@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import {BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer} from "recharts";
 
 function App() {
 
@@ -20,8 +21,23 @@ function App() {
         return <h1>Loading analytics...</h1>;
     }
 
+    //convert backend data into chart format
+    const defectData = Object.entries(
+        analytics.defect_types
+    ).map(([name, value]) => ({
+        name,
+        value
+    }));
+
+    const severityData = Object.entries(
+        analytics.severity_breakdown
+    ).map(([name, value]) => ({
+        name,
+        value
+    }));
+
     return (
-        <div style={{ padding: "20px", fontFamily: "Arial" }}>
+        <div style={{ padding: "30px", fontFamily: "Arial", minHeight: "100vh" }}>
 
             <h1>QC Insight AI Dashboard</h1>
 
@@ -47,6 +63,15 @@ function App() {
             </ul>
 
             <h2>Severity Breakdown</h2>
+            <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={severityData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip />
+                    <Bar dataKey="value" />
+                </BarChart>
+            </ResponsiveContainer>
             <ul>
                 {Object.entries(analytics.severity_breakdown).map(([severity, count]) => (
                     <li key={severity}>
@@ -56,6 +81,15 @@ function App() {
             </ul>
 
             <h2>Defect Types</h2>
+            <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={defectData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip />
+                    <Bar dataKey="value" />
+                </BarChart>
+            </ResponsiveContainer>
             <ul>
                 {Object.entries(analytics.defect_types).map(([defect, count]) => (
                     <li key={defect}>
