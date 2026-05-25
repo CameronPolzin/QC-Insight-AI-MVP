@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String
 from database import Base
 
+#database table model for a Discrepancy Report
 class QCReport(Base):
     __tablename__ = "qc_reports"
 
