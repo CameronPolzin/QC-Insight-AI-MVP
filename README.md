@@ -42,6 +42,16 @@ This project aims to create a centralized analytics platform capable of continuo
 
 # Current MVP Features
 
+## Frontend Dashboard
+
+- React dashboard interface
+- Live analytics pulled from FastAPI backend
+- Bar charts for defect types and severity breakdown
+- Product filtering
+- Ascending/descending sorting
+- Frontend Excel/CSV upload
+- Dashboard refresh after upload
+
 ## Data Import
 
 - Upload Excel (.xlsx) discrepancy reports
@@ -236,7 +246,7 @@ The AI assistant would query the database directly and generate answers grounded
 
 ---
 
-## Planned Frontend
+## Frontend
 
 - React
 - Recharts
@@ -264,19 +274,25 @@ The AI assistant would query the database directly and generate answers grounded
 - Dynamic column normalization
 - Database persistence
 - Analytics endpoints
+- Dashboard frontend
+- Advanced filtering/search
+- Data visualization
 
 ---
 
 ## In Progress
 
-- Dashboard frontend
-- Data visualization
-- Advanced filtering/search
+- Date range filtering
+- Trend charts over time
+- Improved dashboard styling
 
 ---
 
 ## Planned Features
 
+- Date range filtering
+- Defects-over-time trend analysis
+- Exportable reports
 - AI-powered analytics
 - Predictive trend analysis
 - Automated reporting
@@ -312,6 +328,24 @@ By centralizing and analyzing quality data, the platform can help:
 - Support data-driven decision making
 
 ---
+
+# Local Development Setup
+
+## Backend
+
+cd backend
+python -m venv venv
+venv\Scripts\activate
+pip install -r requirements.txt
+uvicorn app:app --reload
+
+## Frontend
+
+cd frontend
+npm install
+npm run dev
+
+--- 
 
 # Author
 
