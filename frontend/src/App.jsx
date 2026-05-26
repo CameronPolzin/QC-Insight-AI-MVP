@@ -5,7 +5,10 @@ function App() {
 
     //stores analytics data fetched from backend
     const [analytics, setAnalytics] = useState(null);
-
+    //stores the file selected for upload
+    const [selectedFile, setSelectedFile] = useState(null);
+    //stores messages related to file upload status
+    const [uploadMessage, setUploadMessage] = useState("");
     //runs once when when the page loads
     useEffect(() => {
 
@@ -15,6 +18,35 @@ function App() {
             .then((data) => setAnalytics(data));
 
     }, []);
+
+    //handles file upload to the backend and updates analytics after upload
+    const handleUpload = async () => {
+        //ensure user selected filke before trying to upload
+        if (!selectedFile) {
+            setUploadMessage("Please select a file first.");
+            return;
+        }
+
+        //create FormData object to send file in POST request
+        const formData = new FormData();
+        formData.append("file", selectedFile);
+
+        //send POST request to backend upload endpoint
+        const response = await fetch("http://127.0.0.1:8000/upload-preview", {
+            method: "POST",
+            body: formData
+        });
+
+        const data = await response.json();
+
+        //display succes or error message
+        setUploadMessage(data.message || data.error);
+
+        //after uplaod, refresh analytics to include new data
+        const analyticsResponse = await fetch("http://127.0.0.1:8000/analytics/summary");
+        const analyticsData = await analyticsResponse.json();
+        setAnalytics(analyticsData);
+    };
 
     //show loading message while waiting for backend data
     if (!analytics) {
@@ -38,9 +70,31 @@ function App() {
 
     return (
         <div style={{ padding: "30px", fontFamily: "Arial", minHeight: "100vh" }}>
-
+            {/*Dashboard Header*/}
             <h1>QC Insight AI Dashboard</h1>
+            {/*Upload Section*/}
+            <div style={{ marginBottom: "30px" }}>
+                <h2>Upload QC Report</h2>
+                
+                {/*File input for user to select CSV/XLSX*/}
+                <input
+                    type="file"
+                    accept=".csv,.xlsx"
+                    onChange={(event) => setSelectedFile(event.target.files[0])}
+                />
 
+                {/*Button to trigger file upload*/}
+                <button
+                    onClick={handleUpload}
+                    style={{ marginLeft: "10px" }}
+                >
+                    Upload
+                </button>
+
+                {/*Display upload status message*/}
+                {uploadMessage && <p>{uploadMessage}</p>}
+            </div>
+            {/*Analytics Summary Section*/}
             <h2>Total Reports</h2>
             <p>{analytics.total_reports}</p>
 
