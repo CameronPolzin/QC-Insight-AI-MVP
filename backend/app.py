@@ -1,8 +1,7 @@
-from fastapi import FastAPI, UploadFile, File
+from fastapi import FastAPI, UploadFile, File, Query
 from fastapi.middleware.cors import CORSMiddleware
 import pandas as pd
 import io
-
 from database import engine, SessionLocal
 from models import Base, QCReport
 from collections import Counter
@@ -106,11 +105,16 @@ def get_reports():
 
 #returns analytics sumamry data for the frontend
 @app.get("/analytics/summary")
-def analytics_summary():
+def analytics_summary(product: str = Query("All")):
 
     db = SessionLocal()
 
-    reports = db.query(QCReport).all()
+    query = db.query(QCReport)
+
+    if product != "All":
+        query = query.filter(QCReport.product == product)
+      
+    reports = query.all()
 
     db.close()
 
@@ -125,13 +129,10 @@ def analytics_summary():
 
     #return data inm JSON format for frontend dashboard
     return {
+        "selected_product": product,
         "total_reports": total_reports,
-
         "top_products": dict(products),
-
         "top_employees": dict(employees),
-
         "severity_breakdown": dict(severities),
-
         "defect_types": dict(defect_types)
     }
